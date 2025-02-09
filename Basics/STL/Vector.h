@@ -2,7 +2,9 @@
 #include <string>
 #include <vector>
 #include <algorithm>
-using namespace std;
+#include "common.h"
+
+using namespace v;
 template <typename T>
 
 auto _unique(vector<T> &vec)

@@ -1,11 +1,27 @@
 CXX = g++
-CXXFLAGS = -I Basics/Common -Wall -Wextra
+CXXFLAGS = -I Basics/Common -Wall -Wextra -MMD -MP
 
-test: Basics/Basics/dynamicMemory/malloc.o
-	$(CXX) $(CXXFLAGS) -o test Basics/Basics/dynamicMemory/malloc.o
+# Gather all source files.
+SRCS := $(wildcard Basics/Railway/*.cpp)
+# Convert source filenames to object filenames in the build directory.
+OBJS := $(patsubst Basics/Railway/%.cpp,Basics/Build/%.o,$(SRCS))
 
-Basics/Basics/dynamicMemory/malloc.o: Basics/Basics/dynamicMemory/malloc.cpp
-	$(CXX) $(CXXFLAGS) -c Basics/Basics/dynamicMemory/malloc.cpp -o Basics/Basics/dynamicMemory/malloc.o
+# Final executable depends on all object files.
+test: $(OBJS)
+	$(CXX) $(CXXFLAGS) -o test $(OBJS)
+
+# Pattern rule: compile each .cpp to a corresponding .o in Basics/Build.
+Basics/Build/%.o: Basics/Railway/%.cpp | Basics/Build
+	$(CXX) $(CXXFLAGS) -c $< -o $@
+
+# Include all generated dependency files.
+-include $(OBJS:.o=.d)
+
+# Ensure the build directory exists.
+Basics/Build:
+	mkdir -p Basics/Build
 
 clean:
-	rm -f Basics/Basics/dynamicMemory/malloc.o test
+	rm -f Basics/Build/*.o Basics/Build/*.d test
+
+.PHONY: clean
