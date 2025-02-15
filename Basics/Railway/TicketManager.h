@@ -3,20 +3,18 @@
 
 namespace v
 {
-class DataManager
-{
-protected:
+using MyMap = std::map<std::string, std::vector<std::vector<std::string>>>;
 
-};
-
-
-class TicketManager:public DataManager
+class TicketManager
 {
 private:
     /* data */
 public:
     TicketManager(/* args */);
     ~TicketManager();
+    bool generate(const MyMap &myData, const string &dbFilename);
+    bool read(MyMap &myData, const string &dbFilename);
+
 };
 
 }

@@ -9,10 +9,11 @@ namespace v
     private:
         /* data */
         UserManagement *_userManager;
+        TicketManager *_ticket;
         string _username;
 
     public:
-        UserInterface(UserManagement *userManager,TicketManager *ticket);
+        UserInterface(UserManagement *userManager, TicketManager *ticket);
         ~UserInterface();
         string error;
 
@@ -23,5 +24,5 @@ namespace v
         bool bookTickets(int &page);
         bool viewTickets(int &page);
     };
-   
+
 }

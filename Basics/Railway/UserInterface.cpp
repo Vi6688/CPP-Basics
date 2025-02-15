@@ -1,7 +1,8 @@
 #include "UserInterface.h"
+
 namespace v
 {
-    UserInterface::UserInterface(UserManagement *userManager) : _userManager(userManager)
+    UserInterface::UserInterface(UserManagement *userManager, [[maybe_unused]] TicketManager *ticket) : _userManager(userManager), _ticket(ticket)
     {
     }
 
@@ -74,35 +75,60 @@ namespace v
     }
     bool UserInterface::createUser([[maybe_unused]] int &page)
     {
-        string station1, station2, date, tickets;
-        map<string, int> passengers;
 
-        println("Enter the departing station:");
-        cin >> station1;
-        println("Enter the arriving station:");
-        cin >> station2;
-        println("Enter the date(DD/MM/YYYY):");
-        cin >> date;
-        println("Enter the number of tickets:");
-        cin >> tickets;
-        for (int i = 1; i <= tickets; i++)
-        {
-            string name, age;
-            println("Enter  the name of the passenger" + string(i) + ":");
-            cin >> name;
-            println("Enter  the age of the passenger" + string(i) + ":");
-            cin >> age;
-            passengers[name] = age;
-        }
         return true;
     }
     bool UserInterface::bookTickets([[maybe_unused]] int &page)
     {
 
+        map<string, vector<vector<string>>> details;
+        vector<string> passenger(6);
+        println("Enter the departing station:");
+        cin >> passenger[0];
+        println("Enter the arriving station:");
+        cin >> passenger[1];
+        println("Enter the date(DD/MM/YYYY):");
+        cin >> passenger[2];
+        println("Enter the number of tickets:");
+        cin >> passenger[3];
+        int noOfTickets = std::stoi(passenger[3]);
+        vector<vector<string>> passengers(noOfTickets);
+        for (int i = 1; i <= noOfTickets; i++)
+        {
+            println("Enter  the name of the passenger" + to_string(i) + ":");
+            cin >> passenger[4];
+            println("Enter  the age of the passenger" + to_string(i) + ":");
+            cin >> passenger[5];
+            passengers[i - 1] = passenger;
+        }
+        details[_username] = passengers;
+        if (_ticket->generate(details, _username))
+            print("Tickets Booked succesfully");
+        page = 2;
         return true;
     }
     bool UserInterface::viewTickets([[maybe_unused]] int &page)
     {
+        map<string, vector<vector<string>>> details;
+
+        _ticket->read(details, _username);
+        vector<string> header = {"Departure", "Arrival", "Date", "tickets", "name", "age"};
+        printRow(header);
+        for (auto const &it : details)
+        {
+            vector<vector<string>> passengers = it.second;
+            for (auto const &passenger : passengers)
+            {
+                printRow(passenger);
+            }
+        }
+
+        print("1)print tickets");
+        print("2)exit");
+        int choice;
+        println("Enter the choice:");
+        cin >> choice;
+        page = 2;
         return true;
     }
 }

@@ -1,4 +1,3 @@
-#pragma once
 #include <iostream>
 #include <unordered_map>
 #include <map>
@@ -6,7 +5,7 @@
 #include <sstream>
 #include <vector>
 #include <string>
-
+#include <iomanip>
 namespace v
 {
     using namespace std;
@@ -105,4 +104,19 @@ namespace v
         print(error);
         print("********************");
     }
+    template <typename T>
+
+    void printRow(const vector<T> &vec)
+    {
+        for (auto it = vec.begin(); it != vec.end(); it++)
+        {
+            if (it == vec.end() - 1)
+            {
+                cout << *it << endl;
+                continue;
+            }
+            cout << *it << setw(15);
+        }
+    }
+
 }

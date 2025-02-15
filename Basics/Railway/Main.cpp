@@ -11,14 +11,14 @@ int main()
 {
   UserManagement *userManager = new UserManagement();
   TicketManager *ticket = new TicketManager();
-  UserInterface *ui = new UserInterface(userManager);
+  UserInterface *ui = new UserInterface(userManager,ticket);
   vector<FuncPtr> pages = {&UserInterface::entryPage, &UserInterface::login, &UserInterface::loggedIn, &UserInterface::createUser, &UserInterface::bookTickets, &UserInterface::viewTickets};
   clrscr();
-
+  bool result = false;
   int page = 0;
   do
   {
-    bool result = (ui->*pages[page])(page);
+    result = (ui->*pages[page])(page);
     clrscr();
     if (!result)
       printError(ui->error);
