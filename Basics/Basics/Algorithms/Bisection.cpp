@@ -1,10 +1,10 @@
 #include <iostream>
 using namespace std;
 
-int lowerRange = 1;
-int upperRange = 500;
+double lowerRange = 1;
+double upperRange = 500;
 
-int guess(const int &num, int &count, int currentNum = (upperRange / 2), int lower = lowerRange, int upper = upperRange)
+double guess(const double &num, int &count, double currentNum = (upperRange / 2), double lower = lowerRange, double upper = upperRange)
 {
     count++;
     if (num == currentNum)
@@ -24,9 +24,9 @@ int guess(const int &num, int &count, int currentNum = (upperRange / 2), int low
     return 0;
 }
 
-int main()
+double main()
 {
-    int number;
+    double number;
     cout << "Enter a number between " << lowerRange << " and " << upperRange << ": ";
     cin >> number;
 
