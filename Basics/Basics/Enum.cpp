@@ -1,7 +1,7 @@
 #include <iostream>
 using namespace std;
 
-enum rainbow
+enum rainbow : int
 {
     violet = 100,
     indigo = 102,
@@ -15,7 +15,7 @@ int main()
 {
     rainbow band = violet;
 
-    rainbow band1 ;
+    rainbow band1 ; 
 
     cout << band + band << endl;
     cout << band1 << endl;

@@ -1,6 +1,6 @@
-#include "String.h"
-#include "common.h"
-#include "Vector.h"
+#include "../Common/String.h"
+#include "../Common/common.h"
+#include "../Common/Vector.h"
 using namespace v;
 int main()
 {

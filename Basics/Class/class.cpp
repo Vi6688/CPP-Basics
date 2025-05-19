@@ -1,6 +1,8 @@
 #include <iostream>
 #include "class.h"
 
+using namespace std;
+
 void car::printCar()
 {
     std::cout << "car name is " << name << std::endl;
@@ -21,6 +23,14 @@ void paint::carColor(car *&car1)
 }
 int main()
 {
+    car carModel1 = car("vijay1", 2023);
+    car carModel2 = car("vijay2", 2023);
+    car carModel3 = car("vijay3", 2023);
+    std::cout << carModel1.name<<endl;
+    std::cout << carModel2.name<<endl;
+    std::cout << carModel3.name<<endl;
+
+
     car *car1 = new car("ford",2023);
     paint *model = new paint("red");
     paint* model1 =new paint("orange");
