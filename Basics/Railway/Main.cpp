@@ -2,6 +2,7 @@
 #include "UserManagement.h"
 #include "UserInterface.h"
 #include "TicketManager.h"
+#include "../Common/Vector.h" 
 #include <unordered_map>
 
 using namespace v;
@@ -12,7 +13,7 @@ int main()
   UserManagement *userManager = new UserManagement();
   TicketManager *ticket = new TicketManager();
   UserInterface *ui = new UserInterface(userManager,ticket);
-  vector<FuncPtr> pages = {&UserInterface::entryPage, &UserInterface::login, &UserInterface::loggedIn, &UserInterface::createUser, &UserInterface::bookTickets, &UserInterface::viewTickets};
+  Vector<FuncPtr> pages = {&UserInterface::entryPage, &UserInterface::login, &UserInterface::loggedIn, &UserInterface::createUser, &UserInterface::bookTickets, &UserInterface::viewTickets};
   clrscr();
   bool result = false;
   int page = 0;
