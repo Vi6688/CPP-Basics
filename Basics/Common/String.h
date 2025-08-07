@@ -143,6 +143,10 @@ namespace v
         {
             return(strcmp(data,other.data) < 0);
         }
+        bool empty() const
+        {
+            return data == nullptr;
+        }
         friend std::ostream &operator<<(std::ostream &os, const String &other)
         {
             os << other.data;
