@@ -1,29 +1,26 @@
+# Compiler and flags
 CXX = g++
-CXXFLAGS = -I Basics/Common -Wall -Wextra -MMD -MP
-LDFLAGS = -lsqlite3   # Add additional libraries here if needed
+CXXFLAGS = -Wall -Wextra -std=c++17
 
-# Gather all source files from Basics/Railway.
-SRCS := $(wildcard Basics/Railway/*.cpp)
+# Target executable name
+TARGET = test
 
-# Convert source filenames to object filenames in the build directory.
-OBJS := $(patsubst Basics/Railway/%.cpp,Basics/Build/%.o,$(SRCS))
+# Source file
+SRCS = Main.cpp
 
-# Final executable depends on all object files.
-test: $(OBJS)
-	$(CXX) $(CXXFLAGS) -o test $(OBJS) $(LDFLAGS)
+# Object file
+OBJS = $(SRCS:.cpp=.o)
 
-# Pattern rule: compile each .cpp file to a corresponding .o file in Basics/Build.
-Basics/Build/%.o: Basics/Railway/%.cpp | Basics/Build
+# Build rule
+$(TARGET): $(OBJS)
+	$(CXX) $(CXXFLAGS) -o $@ $(OBJS)
+
+# Compile .cpp → .o
+%.o: %.cpp
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-# Include all generated dependency files.
--include $(OBJS:.o=.d)
-
-# Ensure the build directory exists.
-Basics/Build:
-	mkdir -p Basics/Build
-
+# Clean rule
 clean:
-	rm -f Basics/Build/*.o Basics/Build/*.d test
+	rm -f $(OBJS) $(TARGET)
 
-.PHONY: clean cleanlink here
+.PHONY: clean
