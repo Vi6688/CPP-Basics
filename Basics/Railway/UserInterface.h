@@ -10,7 +10,7 @@ namespace v
         /* data */
         UserManagement *_userManager;
         TicketManager *_ticket;
-        string _username;
+        String _username;
 
     public:
         UserInterface(UserManagement *userManager, TicketManager *ticket);

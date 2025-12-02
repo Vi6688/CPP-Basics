@@ -35,7 +35,7 @@ public:
   Pair<F, S> *begin() { return _table.begin(); }
   Pair<F, S> *end() { return _table.begin() + _table.getSize(); }
   Pair<F, S> *find(const F &first) {
-    if (_table.getSize() <= 0)
+    if (_table.size() <= 0)
       return nullptr;
     for (auto i = _table.begin(); i != _table.end(); i++) {
       if (i->first == first)
@@ -44,7 +44,7 @@ public:
     }
     return nullptr;
   }
-  size_t size() const { return _table.getSize(); }
+  size_t size() const { return _table.size(); }
   friend std::ostream &operator<<(std::ostream &os, const Map<F, S> &map) {
     os << "{ ";
     for (size_t i = 0; i < map.size(); i++) {
