@@ -1,5 +1,5 @@
 #include "UserInterface.h"
-
+#include "common.h"
 namespace v
 {
     UserInterface::UserInterface(UserManagement *userManager, [[maybe_unused]] TicketManager *ticket) : _userManager(userManager), _ticket(ticket)
@@ -29,7 +29,7 @@ namespace v
     }
     bool UserInterface::login([[maybe_unused]] int &page)
     {
-        string username, password;
+        String username, password;
         print("____Welcome to login page____");
         println("Enter the username:");
         cin >> username;
@@ -81,8 +81,8 @@ namespace v
     bool UserInterface::bookTickets([[maybe_unused]] int &page)
     {
 
-        map<string, vector<vector<string>>> details;
-        vector<string> passenger(6);
+        map<String, vector<vector<String>>> details;
+        vector<String> passenger(6);
         println("Enter the departing station:");
         cin >> passenger[0];
         println("Enter the arriving station:");
@@ -92,12 +92,12 @@ namespace v
         println("Enter the number of tickets:");
         cin >> passenger[3];
         int noOfTickets = std::stoi(passenger[3]);
-        vector<vector<string>> passengers(noOfTickets);
+        vector<vector<String>> passengers(noOfTickets);
         for (int i = 1; i <= noOfTickets; i++)
         {
-            println("Enter  the name of the passenger" + to_string(i) + ":");
+            println("Enter  the name of the passenger" + to_String(i) + ":");
             cin >> passenger[4];
-            println("Enter  the age of the passenger" + to_string(i) + ":");
+            println("Enter  the age of the passenger" + to_String(i) + ":");
             cin >> passenger[5];
             passengers[i - 1] = passenger;
         }
@@ -109,14 +109,14 @@ namespace v
     }
     bool UserInterface::viewTickets([[maybe_unused]] int &page)
     {
-        map<string, vector<vector<string>>> details;
+        map<String, vector<vector<String>>> details;
 
         _ticket->read(details, _username);
-        vector<string> header = {"Departure", "Arrival", "Date", "tickets", "name", "age"};
+        vector<String> header = {"Departure", "Arrival", "Date", "tickets", "name", "age"};
         printRow(header);
         for (auto const &it : details)
         {
-            vector<vector<string>> passengers = it.second;
+            vector<vector<String>> passengers = it.second;
             for (auto const &passenger : passengers)
             {
                 printRow(passenger);

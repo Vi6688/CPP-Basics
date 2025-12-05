@@ -5,8 +5,8 @@ template <typename T> class Vector {
 private:
   T *data;
   /* data */
-  size_t capacity;
-  size_t _size;
+  size_t capacity = 0;
+  size_t _size = 0;
 
 public:
   Vector() : data(nullptr) {}
@@ -30,7 +30,6 @@ public:
     }
     delete[] data;
     data = newData;
-    _size = newCapacity;
     capacity = newCapacity;
   }
   ~Vector() { delete[] data; }
@@ -93,7 +92,7 @@ public:
     return data[index];
   }
   size_t size() const { return _size; }
-  size_t getCapacityy() const { return capacity; }
+  size_t getCapacity() const { return capacity; }
   bool isEmpty() const { return _size == 0; }
   // friend std::ostream &operator<<(std::ostream &os,const T &value)
   // {
