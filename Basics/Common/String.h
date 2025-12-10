@@ -112,7 +112,11 @@ public:
   bool operator<(const String &other) { return (strcmp(data, other.data) < 0); }
   bool empty() const { return data == nullptr; }
   friend std::ostream &operator<<(std::ostream &os, const String &other) {
-    os << other.data;
+    if (other.data) {
+      os << other.data;
+    } else {
+      os << "Empty String";
+    }
     return os;
   }
   friend std::istream &operator>>(std::istream &is, const String &other) {

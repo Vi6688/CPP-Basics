@@ -1,3 +1,5 @@
+#pragma once
+#include <cstring>
 #include <iostream>
 
 namespace v {
@@ -23,15 +25,27 @@ public:
 
   T *begin() { return data; }
   T *end() { return data + _size; }
-  void resize(size_t newCapacity) {
-    T *newData = new T[newCapacity];
+
+  void resize(const size_t size) {
+    T *newData = new T[_size];
     for (size_t i = 0; i < _size; ++i) {
       newData[i] = data[i];
     }
     delete[] data;
     data = newData;
-    capacity = newCapacity;
+    _size = size;
+    capacity = size;
   }
+
+  void resize(const size_t size, const T &fill) {
+    T *newData = new T[size];
+    for (size_t i = 0; i < size; ++i) {
+      newData[i] = fill;
+    }
+    _size = size;
+    data = newData;
+  }
+
   ~Vector() { delete[] data; }
   Vector(const Vector &other) : data(nullptr), _size(0), capacity(0) {
     data = new T[other.capacity];
@@ -100,8 +114,12 @@ public:
   //     return os;
   // }
   friend std::ostream &operator<<(std::ostream &os, const Vector &vec) {
-    for (size_t i = 0; i < vec._size; ++i) {
-      os << vec.data[i] << " ";
+    if (vec.size()) {
+      for (size_t i = 0; i < vec._size; ++i) {
+        os << vec.data[i] << " ";
+      }
+    } else {
+      os << "{}";
     }
     return os;
   }
@@ -111,8 +129,12 @@ public:
   //     return os;
   // }
   void print() const {
-    for (size_t i = 0; i < _size; ++i) {
-      std::cout << data[i] << " ";
+    if (_size) {
+      for (size_t i = 0; i < _size; ++i) {
+        std::cout << data[i] << " ";
+      }
+    } else {
+      std::cout << "{ }" << std::endl;
     }
     std::cout << std::endl;
   }

@@ -10,7 +10,7 @@ public:
   F first;
   S second;
 
-  Pair(const F &f, const S &s) : first(f), second(s) {}
+  Pair(const F &first, const S &second) : first(first), second(second) {}
   Pair() {}
   friend std::ostream &operator<<(std::ostream &os, const Pair<F, S> &p) {
     os << "{ " << p.first << " ," << p.second << " }";
@@ -25,7 +25,7 @@ private:
 
 public:
   Map() {}
-  Map(hash<F,S> table) : _table(table) {}
+  Map(hash<F, S> table) : _table(table) {}
   Map(std::initializer_list<Pair<F, S>> table) : _table(table) {}
   S &operator[](const F &first) {
     for (int i = 0; i < _table.getSize(); i++) {
