@@ -1,5 +1,6 @@
 #include "UserInterface.h"
 #include "common.h"
+
 namespace v
 {
     UserInterface::UserInterface(UserManagement *userManager, [[maybe_unused]] TicketManager *ticket) : _userManager(userManager), _ticket(ticket)
@@ -13,7 +14,7 @@ namespace v
     bool UserInterface::entryPage([[maybe_unused]] int &page)
     {
         int option;
-        print("::::Welcome to Railway Ticket Booking Platfom::::");
+        v::print("::::Welcome to Railway Ticket Booking Platfom::::");
         print("1.)Login");
         print("2.)Create user");
         print("3.)Exit");

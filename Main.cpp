@@ -1,6 +1,8 @@
 #include "String.h"
 #include "Vector.h"
 #include <iostream>
+#include "Map.h"
+
 using namespace std;
 using namespace v;
 
@@ -19,6 +21,7 @@ int main() {
   cout << "Capacity: " << strVec.size() << endl;
   cout << "Capacity: " << strVec.getCapacity() << endl;
 
+  Map<String, Vector<int>> a = {};
 
   return 0;
 }

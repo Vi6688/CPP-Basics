@@ -1,3 +1,4 @@
+#pragma once
 #include "String.h"
 #include "Vector.h"
 #include <cmath>
