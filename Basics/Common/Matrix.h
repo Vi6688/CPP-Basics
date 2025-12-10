@@ -122,6 +122,7 @@ public:
           for (size_t colums = 0; colums < columnSize; colums++) {
             os << matrix.data[row][colums] << ", ";
           }
+          os << "\n";
         }
         os << "}";
       }
