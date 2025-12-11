@@ -20,10 +20,8 @@ public:
   Matrix(const std::initializer_list<std::initializer_list<T>> &list) {
     data.resize(list.size());
     int i = 0;
-    data = {{0, 0}, {0, 0}};
     for (const auto &row : list) {
-      std::cout << data[i] << std::endl;
-      // data[i].resize(row.size());
+      data[i].resize(row.size());
       int j = 0;
       for (const T &val : row) {
         data[i][j] = val;
@@ -33,7 +31,6 @@ public:
     }
   }
   Matrix<T> &operator=(MatrixXd<T> &list) {
-    std::cout << __LINE__ << std::endl;
 
     data.resize(list.size());
     int i = 0;
@@ -45,12 +42,13 @@ public:
         ++j;
       }
       std::cout << data[i] << std::endl;
-      std::cout << __LINE__ << std::endl;
       ++i;
     }
     return this;
   }
-  Matrix(const int &m, const int &n) { data = Vector<Vector<T>>(m, n); }
+  Matrix(const int &rows, const int &columns) {
+    data = Vector<Vector<T>>(rows, columns);
+  }
   Matrix<T> transpose() {
     Vector<Vector<T>> result = Vector<Vector<T>>(data[0].size(), data.size());
     for (size_t i = 0; i < data.size(); ++i)
@@ -59,16 +57,27 @@ public:
     return result;
   }
 
-  MatrixXd<T> multiplyMatrices(const MatrixXd<T> &A, const MatrixXd<T> &B) {
-    size_t rows = A.size(), cols = B[0].size(), inner = B.size();
-    if (A[0].size() != inner)
-      throw std::invalid_argument("Incompatible dimensions.");
-    Matrix result(rows, Vector<double>(cols, 0));
+  Matrix<T> operator*(const Matrix<T> &other) {
+    size_t rows = noOfRows();
+    size_t cols = other.noOfColumns();
+    size_t inner = noOfColumns();
+
+    if (inner != other.noOfRows())
+      throw std::invalid_argument(
+          "Matrix Multiplication = Incompatible dimensions.");
+
+    MatrixXd<T> result(rows, cols);
+
     for (size_t i = 0; i < rows; ++i)
-      for (size_t j = 0; j < cols; ++j)
-        for (size_t k = 0; k < inner; ++k)
-          result[i][j] += A[i][k] * B[k][j];
-    return result;
+      for (size_t j = 0; j < cols; ++j) {
+        T sum = 0;
+        for (size_t k = 0; k < inner; ++k) {
+          sum += data[i][k] * other[k][j];
+        }
+        result[i][j] = sum;
+      }
+
+    return Matrix<T>(result);
   }
 
   MatrixXd<T> invertMatrix(const MatrixXd<T> &A) {
@@ -101,8 +110,9 @@ public:
         inverse[i][j] = augmented[i][n + j];
     return inverse;
   }
+
   Row<T> operator[](const int &row) const {
-    if (data.size() <= row) {
+    if (row >= noOfRows()) {
       return {};
     } else {
       return data[row];
@@ -122,12 +132,18 @@ public:
           for (size_t colums = 0; colums < columnSize; colums++) {
             os << matrix.data[row][colums] << ", ";
           }
-          os << "\n";
         }
-        os << "}";
+        os << "}\n";
       }
     }
     return os;
+  }
+  size_t noOfRows() const { return data.size(); }
+  size_t noOfColumns() const {
+    if (!data.size() || !data[0].size())
+      return 0;
+    else
+      return data[0].size();
   }
   void printMatrix() {
     for (const auto &row : data) {

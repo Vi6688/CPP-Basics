@@ -8,8 +8,11 @@
 #include <string>
 #include <unordered_map>
 #include <vector>
+
 namespace v {
 using namespace std;
+
+#define loopI(SIZE) for (int i = 0; i < SIZE; i++)
 
 inline void readCsv(Vector<Vector<string>> &data) {
   ifstream inputFile("Basics/Railway/user.csv");
