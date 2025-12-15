@@ -10,28 +10,33 @@ namespace v {
 
 template <typename T> class Vector;
 template <typename T> class VectorElement {
-  Vector<T> *parent;
-  size_t index;
+  Vector<T> *_parent;
+  size_t _index;
 
 public:
   VectorElement(Vector<T> *parent, size_t index)
-      : parent(parent), index(index) {}
-
+      : _parent(parent), _index(index) {}
   // Assignment: v[i] = value
   VectorElement &operator=(const T &value) {
-    (*parent).data()[index] = value;
+    (*_parent).data()[_index] = value;
     return *this;
   }
-  void resize(const size_t &size) { (*parent).data()[index].resize(size); }
+  size_t size() { return (*_parent).data()->size(); }
+  size_t size() const { return (*_parent).data()->size(); }
+
+  void resize(const size_t &size) { (*_parent).data()[_index].resize(size); }
   void resize(const size_t &size, const T &fill) {
-    (*parent).data()[index].resize(size, fill);
+    (*_parent).data()[_index].resize(size, fill);
   }
 
-  operator T() const { return (*parent).data()[index]; }
+  operator T() const { return (*_parent).data()[_index]; }
 
-  auto operator[](size_t j) { return (*parent).data()[index][j]; }
+  auto operator[](const size_t &index) {
+    return (*_parent).data()[_index][index];
+  }
+  auto operator[](size_t j) const { return (*_parent).data()[_index][j]; }
 
-  auto operator[](size_t j) const { return (*parent).data()[index][j]; }
+  auto data() { return (*_parent).data(); }
 };
 template <typename T>
 
@@ -157,6 +162,11 @@ public:
     os << "}";
     return os;
   }
+
+  auto begin() { return _data; }
+  auto end() { return _data + _size; }
+  auto begin() const { return _data; }
+  auto end() const { return _data + _size; }
 };
 
 template <typename T> using AnyArray = Vector<T>;
