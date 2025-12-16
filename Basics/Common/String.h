@@ -110,6 +110,12 @@ public:
   }
   bool operator>(const String &other) { return (strcmp(data, other.data) > 0); }
   bool operator<(const String &other) { return (strcmp(data, other.data) < 0); }
+  bool operator>(const String &other) const {
+    return (strcmp(data, other.data) > 0);
+  }
+  bool operator<(const String &other) const {
+    return (strcmp(data, other.data) < 0);
+  }
   bool empty() const { return data == nullptr; }
   friend std::ostream &operator<<(std::ostream &os, const String &other) {
     if (other.data) {

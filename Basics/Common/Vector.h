@@ -106,17 +106,17 @@ public:
   void resize(size_t newSize) {
     T *newData = new T[newSize];
     size_t copySize = (newSize < _size) ? newSize : _size;
-
-    if constexpr (std::is_trivially_copyable<T>::value) {
-      memmove(newData, _data, copySize * sizeof(T));
-    } else {
-      for (size_t i = 0; i < copySize; i++)
-        newData[i] = _data[i];
+    if (copySize) {
+      if constexpr (std::is_trivially_copyable<T>::value) {
+        memmove(newData, _data, copySize * sizeof(T));
+      } else {
+        for (size_t i = 0; i < copySize; i++)
+          newData[i] = _data[i];
+      }
     }
 
     delete[] _data;
     _data = newData;
-    _size = newSize;
     capacity = newSize;
   }
 
@@ -126,7 +126,6 @@ public:
       newData[i] = fill;
     }
     delete[] _data;
-    _size = newSize;
     _data = newData;
     capacity = newSize;
   }
@@ -156,11 +155,40 @@ public:
   }
 
   friend std::ostream &operator<<(std::ostream &os, const Vector &vec) {
+    if (!vec._size) {
+      os << "{ }";
+      return os;
+    }
     os << "{ ";
     for (size_t i = 0; i < vec._size; i++)
       os << vec._data[i] << " ";
     os << "}";
     return os;
+  }
+
+  T *insert(T *pos, const T &value) {
+
+    size_t index = pos - begin();
+    // Grow capacity if needed
+    if (_size >= capacity) {
+      size_t newCap = (capacity == 0) ? 1 : capacity * 2;
+      resize(newCap);
+    }
+
+    if (_size == 1) {
+      _data[0] = value;
+      return begin();
+    }
+    // Shift elements to the right
+    for (size_t i = _size - 1; i > index; --i) {
+      _data[i] = _data[i - 1];
+    }
+
+    // Insert new element
+    _data[index] = value;
+    ++_size;
+
+    return begin() + index;
   }
 
   auto begin() { return _data; }

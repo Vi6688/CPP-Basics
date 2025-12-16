@@ -17,9 +17,26 @@ int main() {
   Matrix<int> matrix1 = {{1, 2}, {1, 2}};
   Matrix<int> matrix2 = {{1, 2}, {1, 2}};
 
-  matrix2 = matrix1.transpose();
+  Map<String, Vector<String>> map = {
+      {"fruits", {"apple", "banana", "cherry"}},
+      {"vegetables", {"carrot", "broccoli", "spinach"}}};
 
-  cout << matrix1.transpose() << endl;
+  map["fruits"] = Vector<String>{"apple", "banana", "cherry", "orange"};
+  map["grains"] = {"rice", "wheat", "barley"};
+
+  std::cout << "Map size: " << map.size() << std::endl;
+
+  for (const auto &m : map) {
+    cout << m.first << " : ";
+    for (const auto &v : m.second) {
+      cout << v << " ";
+    }
+    cout << endl;
+  }
+
+  // matrix2 = matrix1.transpose();
+
+  // cout << matrix1.transpose() << endl;
   // auto mulmatrix = matrix1 * matrix2;
   // cout << mulmatrix << endl;
   // cout << matrix1 << endl;
@@ -29,7 +46,6 @@ int main() {
 
   // Vector<Vector<int>> mat = {{1, 2, 3}, {4, 5, 6}, {7, 8, 9}};
 
-  
   // mat[0][0] = 100;
 
   // auto row = mat[0];

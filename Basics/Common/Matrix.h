@@ -48,7 +48,9 @@ public:
 
   Matrix(std::initializer_list<std::initializer_list<T>> list) {
     data.resize(list.size());
+
     size_t i = 0;
+    std::cout << "Initializer list matrix constructor called\n";
     for (const auto &row : list) {
       data[i].resize(row.size());
       size_t j = 0;
