@@ -5,7 +5,7 @@ template <typename T> class Vector {
 private:
   T *data;
   /* data */
-  size_t capacity;
+  size_t _capacity;
   size_t _size;
 
 public:
@@ -13,7 +13,7 @@ public:
   Vector(std::initializer_list<T> list) {
     data = new T[list.size()];
     _size = list.size();
-    capacity = _size;
+    _capacity = _size;
     auto it = list.begin();
     for (size_t i = 0; i < _size; i++) {
       data[i] = *it;
@@ -30,20 +30,19 @@ public:
     }
     delete[] data;
     data = newData;
-    _size = newCapacity;
-    capacity = newCapacity;
+    _capacity = newCapacity;
   }
   ~Vector() { delete[] data; }
-  Vector(const Vector &other) : data(nullptr), _size(0), capacity(0) {
-    data = new T[other.capacity];
-    capacity = other.capacity;
+  Vector(const Vector &other) : data(nullptr), _size(0), _capacity(0) {
+    data = new T[other._capacity];
+    _capacity = other._capacity;
     _size = other._size;
     for (size_t i = 0; i < _size; ++i) {
       data[i] = other.data[i];
     }
   }
   Vector(const size_t &size, const T &fill)
-      : data(nullptr), _size(size), capacity(size) {
+      : data(nullptr), _size(size), _capacity(size) {
     data = new T[size];
     for (size_t i = 0; i < _size; ++i) {
       data[i] = fill;
@@ -51,14 +50,14 @@ public:
   }
   Vector(const size_t newCapacity) {
     data = new T[newCapacity];
-    capacity = newCapacity;
+    _capacity = newCapacity;
     _size = newCapacity;
   }
   Vector &operator=(const Vector &other) {
     if (this != &other) {
       delete[] data;
-      data = new T[other.capacity];
-      capacity = other.capacity;
+      data = new T[other._capacity];
+      _capacity = other._capacity;
       _size = other._size;
       for (size_t i = 0; i < _size; ++i) {
         data[i] = other.data[i];
@@ -68,8 +67,8 @@ public:
   }
 
   void push_back(const T &value) {
-    if (_size >= capacity) {
-      resize(capacity == 0 ? 1 : capacity * 2); // Double the capacity
+    if (_size >= _capacity) {
+      resize(_capacity == 0 ? 1 : _capacity * 2); // Double the capacity
     }
     data[_size++] = value;
   }
@@ -93,7 +92,7 @@ public:
     return data[index];
   }
   size_t size() const { return _size; }
-  size_t getCapacityy() const { return capacity; }
+  size_t getCapacityy() const { return _capacity; }
   bool isEmpty() const { return _size == 0; }
   // friend std::ostream &operator<<(std::ostream &os,const T &value)
   // {
