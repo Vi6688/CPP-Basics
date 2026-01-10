@@ -2,7 +2,7 @@
 #include "UserManagement.h"
 #include "UserInterface.h"
 #include "TicketManager.h"
-#include "../Common/Vector.h" 
+#include "Vector.h" 
 #include <unordered_map>
 
 using namespace v;

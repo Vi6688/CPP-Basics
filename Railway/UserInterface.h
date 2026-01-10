@@ -10,12 +10,12 @@ namespace v
         /* data */
         UserManagement *_userManager;
         TicketManager *_ticket;
-        string _username;
+        String _username;
 
     public:
         UserInterface(UserManagement *userManager, TicketManager *ticket);
         ~UserInterface();
-        string error;
+        String error;
 
         bool entryPage(int &page);
         bool login(int &page);

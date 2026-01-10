@@ -1,57 +1,120 @@
+#pragma once
 #include "Vector.h"
+#include <algorithm>
+#include <iostream>
 #include <list>
 #include <utility>
 
 namespace v {
 
-template <typename F, typename S> class Pair {
+template <typename Key, typename Value> class Pair {
 public:
-  F first;
-  S second;
+  Key first;
+  Value second;
 
-  Pair(const F &f, const S &s) : first(f), second(s) {}
+  Pair(const Key &first, const Value &second) : first(first), second(second) {}
   Pair() {}
-  friend std::ostream &operator<<(std::ostream &os, const Pair<F, S> &p) {
+  friend std::ostream &operator<<(std::ostream &os, const Pair<Key, Value> &p) {
     os << "{ " << p.first << " ," << p.second << " }";
     return os;
   }
+  Pair<Key, Value> &operator=(const Pair<Key, Value> &other) {
+    first = other.first;
+    second = other.second;
+    return *this;
+  }
+  Value &operator[](const Key &key) {
+    if (key == first)
+      return second;
+    throw std::out_of_range("Key not found");
+  }
 };
-template <typename F, typename S> using hash = Vector<Pair<F, S>>;
 
-template <typename F, typename S> class Map {
+template <typename Key, typename Value> using hash = Vector<Pair<Key, Value>>;
+template <typename Key, typename Value>
+class Map {
 private:
-  hash<F, S> _table;
+  Vector<Pair<Key, Value>> _table;
+
+  void _sort() {
+    std::sort(_table.begin(), _table.end(),
+      [](const Pair<Key, Value>& a, const Pair<Key, Value>& b) {
+        return a.first < b.first;
+      });
+  }
+
+  Pair<Key, Value>* _binarySearch(const Key& key) {
+    auto it = std::lower_bound(
+      _table.begin(), _table.end(), key,
+      [](const Pair<Key, Value>& a, const Key& b) {
+        return a.first < b;
+      });
+
+    if (it == _table.end() || it->first != key)
+      return nullptr;
+
+    return it;
+  }
 
 public:
-  Map() {}
-  Map(hash<F,S> table) : _table(table) {}
-  Map(std::initializer_list<Pair<F, S>> table) : _table(table) {}
-  S &operator[](const F &first) {
-    for (int i = 0; i < _table.getSize(); i++) {
-      if (_table[i].first == first)
-        return _table[i].second;
-    }
+  Map() = default;
+
+  Map(std::initializer_list<Pair<Key, Value>> list) : _table(list) {
+    _sort();
   }
-  Pair<F, S> *begin() { return _table.begin(); }
-  Pair<F, S> *end() { return _table.begin() + _table.getSize(); }
-  Pair<F, S> *find(const F &first) {
-    if (_table.getSize() <= 0)
+
+  size_t size() const { return _table.size(); }
+
+  Pair<Key, Value>* begin() { return _table.begin(); }
+  Pair<Key, Value>* end() { return _table.end(); }
+
+  const Pair<Key, Value>* begin() const { return _table.begin(); }
+  const Pair<Key, Value>* end() const { return _table.end(); }
+
+  Value* find(const Key& key) {
+    auto p = _binarySearch(key);
+    return p ? &p->second : nullptr;
+  }
+
+  const Value* find(const Key& key) const {
+    auto it = std::lower_bound(
+      _table.begin(), _table.end(), key,
+      [](const Pair<Key, Value>& a, const Key& b) {
+        return a.first < b;
+      });
+
+    if (it == _table.end() || it->first != key)
       return nullptr;
-    for (auto i = _table.begin(); i != _table.end(); i++) {
-      if (i->first == first)
-        return i;
-      i++;
-    }
-    return nullptr;
+
+    return &it->second;
   }
-  size_t size() const { return _table.getSize(); }
-  friend std::ostream &operator<<(std::ostream &os, const Map<F, S> &map) {
-    os << "{ ";
-    for (size_t i = 0; i < map.size(); i++) {
-      os << map._table[i] << " ";
+
+  /// operator[] — inserts if missing (std::map behavior)
+  Value& operator[](const Key& key) {
+    auto it = std::lower_bound(
+      _table.begin(), _table.end(), key,
+      [](const Pair<Key, Value>& a, const Key& b) {
+        return a.first < b;
+      });
+
+    if (it == _table.end() || it->first != key) {
+      auto emptyPair = Pair<Key, Value>(key, Value{});
+      _table.push_back(emptyPair);
+
     }
-    os << " }";
+    it = _table.end() - 1;
+
+    // _sort();
+    return it->second;
+  }
+
+  friend std::ostream& operator<<(std::ostream& os, const Map& map) {
+    os << "{ ";
+    for (const auto& p : map._table)
+      os << p << " ";
+    os << "}";
     return os;
   }
 };
+
 } // namespace v

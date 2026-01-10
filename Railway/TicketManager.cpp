@@ -10,11 +10,11 @@ namespace v
     TicketManager::TicketManager()
     {
     }
-    bool TicketManager::generate(const MyMap &myData, const string &dbFilename)
+    bool TicketManager::generate(const MyMap &myData, const String &dbFilename)
     {
         sqlite3 *db = nullptr;
         char *errMsg = nullptr;
-        int rc = sqlite3_open(dbFilename.c_str(), &db);
+        int rc = sqlite3_open(dbFilename.get(), &db);
         if (rc != SQLITE_OK)
         {
             cerr << "Can't open database: " << sqlite3_errmsg(db) << endl;
@@ -22,7 +22,7 @@ namespace v
         }
 
         // Create table if it does not exist.
-        string createTableSQL =
+        String createTableSQL =
             "CREATE TABLE IF NOT EXISTS MyMapTable ("
             "mapKey TEXT, "
             "outerIndex INTEGER, "
@@ -33,7 +33,7 @@ namespace v
             "col5 TEXT, "
             "col6 TEXT"
             ");";
-        rc = sqlite3_exec(db, createTableSQL.c_str(), nullptr, nullptr, &errMsg);
+        rc = sqlite3_exec(db, createTableSQL.get(), nullptr, nullptr, &errMsg);
         if (rc != SQLITE_OK)
         {
             cerr << "SQL error during table creation: " << errMsg << endl;
@@ -48,8 +48,8 @@ namespace v
         // For each map entry, insert each inner vector as a row.
         for (const auto &entry : myData)
         {
-            const string &key = entry.first;
-            const vector<vector<string>> &outerVec = entry.second;
+            const String &key = entry.first;
+            const vector<vector<String>> &outerVec = entry.second;
             for (size_t i = 0; i < outerVec.size(); i++)
             {
                 if (outerVec[i].size() != 6)
@@ -91,9 +91,9 @@ int readMapCallback(void* data, int argc, char** argv, char** colNames) {
     // Expecting columns: mapKey, outerIndex, col1, col2, col3, col4, col5, col6.
     if (argc < 8) return 1;
     (void)colNames;
-    string key = argv[0] ? argv[0] : "";
+    String key = argv[0] ? argv[0] : "";
     // We ignore outerIndex for reconstruction since we simply append rows in order.
-    vector<string> inner;
+    vector<String> inner;
     for (int i = 2; i < 8; ++i) {
         inner.push_back(argv[i] ? argv[i] : "");
     }
@@ -101,17 +101,17 @@ int readMapCallback(void* data, int argc, char** argv, char** colNames) {
     return 0;
 }
 
-bool TicketManager::read(MyMap& myData, const string& dbFilename) {
+bool TicketManager::read(MyMap& myData, const String& dbFilename) {
     sqlite3* db = nullptr;
     char* errMsg = nullptr;
-    int rc = sqlite3_open(dbFilename.c_str(), &db);
+    int rc = sqlite3_open(dbFilename.get(), &db);
     if (rc != SQLITE_OK) {
         cerr << "Can't open database: " << sqlite3_errmsg(db) << endl;
         return false;
     }
     
-    string selectSQL = "SELECT mapKey, outerIndex, col1, col2, col3, col4, col5, col6 FROM MyMapTable ORDER BY mapKey, outerIndex;";
-    rc = sqlite3_exec(db, selectSQL.c_str(), readMapCallback, &myData, &errMsg);
+    String selectSQL = "SELECT mapKey, outerIndex, col1, col2, col3, col4, col5, col6 FROM MyMapTable ORDER BY mapKey, outerIndex;";
+    rc = sqlite3_exec(db, selectSQL.get(), readMapCallback, &myData, &errMsg);
     if (rc != SQLITE_OK) {
         cerr << "SQL error during select: " << errMsg << endl;
         sqlite3_free(errMsg);

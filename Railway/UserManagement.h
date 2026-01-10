@@ -1,4 +1,5 @@
 #pragma once
+#include "String.h"
 #include "common.h"
 
 namespace v
@@ -6,37 +7,37 @@ namespace v
     class User
     {   
         private:
-        string _user,_password,_email,_mobileNo;
+        String _user,_password,_email,_mobileNo;
         
         public:
-        User(const string &name,const string &password,const string &email,const string &phoneNO):_user(name),_password(password),_email(email),_mobileNo(phoneNO)
+        User(const String &name,const String &password,const String &email,const String &phoneNO):_user(name),_password(password),_email(email),_mobileNo(phoneNO)
         {
         }
-        void setUserName(string &userName)
+        void setUserName(String &userName)
         {
             _user = userName;
         }
-        void setPassword(string &password)
+        void setPassword(String &password)
         {
             _password = password;
         }
-        void setPhoneNo(string &no)
+        void setPhoneNo(String &no)
         {
             _mobileNo = no;
         }
-        string getUsername()
+        String getUsername()
         {
             return _user;
         }
-        string getPassword()
+        String getPassword()
         {
             return _password;
         }
-        string getEmail()
+        String getEmail()
         {
             return _email;
         }
-        string getMobileNo()
+        String getMobileNo()
         {
             return _mobileNo;
         }
@@ -45,12 +46,12 @@ namespace v
     class UserManagement
     {
     private:
-        unordered_map<string , User*> _userList;
+        unordered_map<String , User*> _userList;
     public:
         UserManagement();
-        // bool createUser(map<string,string> &userdetails);
-        bool validateUsername(string &username);
-        bool validatePassword(string &username, string &password);
+        // bool createUser(map<String,String> &userdetails);
+        bool validateUsername(String &username);
+        bool validatePassword(String &username, String &password);
         ~UserManagement();
     };
     
