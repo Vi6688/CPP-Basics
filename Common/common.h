@@ -1,11 +1,11 @@
 #pragma once
-#include "Vector.h"
+#include "Vector.hpp"
 #include <fstream>
 #include <iomanip>
 #include <iostream>
 #include <map>
 #include <sstream>
-#include <string>
+// #include <string>
 #include <unordered_map>
 #include <vector>
 
@@ -14,27 +14,28 @@ using namespace std;
 
 #define loopI(SIZE) for (int i = 0; i < SIZE; i++)
 
-inline void readCsv(Vector<Vector<string>> &data) {
-  ifstream inputFile("Basics/Railway/user.csv");
-  if (!inputFile.is_open()) {
-    cerr << "Failed to open input.csv" << endl;
-    return;
-  }
+ 
+// inline void readCsv(Vector<Vector<string>> &data) {
+//   ifstream inputFile("Basics/Railway/user.csv");
+//   if (!inputFile.is_open()) {
+//     cerr << "Failed to open input.csv" << endl;
+//     return;
+//   }
 
-  string line;
+//   string line;
 
-  while (getline(inputFile, line)) {
-    Vector<string> row;
-    stringstream ss(line);
-    string value;
+//   while (getline(inputFile, line)) {
+//     Vector<string> row;
+//     stringstream ss(line);
+//     string value;
 
-    while (getline(ss, value, ',')) {
-      row.push_back(value);
-    }
-    data.push_back(row);
-  }
-  inputFile.close();
-}
+//     while (getline(ss, value, ',')) {
+//       row.push_back(value);
+//     }
+//     data.push_back(row);
+//   }
+//   inputFile.close();
+// }
 
 template <typename T> void printArray(const T a, const int &length) {
   for (int i = 0; i < length; i++) {

@@ -1,5 +1,6 @@
-#include <cstring>
+#pragma once
 #include <iostream>
+#include <cstring>
 
 namespace v {
 class String {

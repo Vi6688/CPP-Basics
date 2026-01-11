@@ -107,14 +107,9 @@ public:
     T *newData = new T[newSize];
     size_t copySize = (newSize < _size) ? newSize : _size;
     if (copySize) {
-      if constexpr (std::is_trivially_copyable<T>::value) {
-        memmove(newData, _data, copySize * sizeof(T));
-      } else {
-        for (size_t i = 0; i < copySize; i++)
-          newData[i] = _data[i];
-      }
+      for (size_t i = 0; i < copySize; i++)
+        newData[i] = _data[i];
     }
-
     delete[] _data;
     _data = newData;
     capacity = newSize;
