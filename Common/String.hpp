@@ -1,8 +1,10 @@
 #pragma once
-#include <iostream>
 #include <cstring>
+#include <iostream>
+#include <string.h>
 
 namespace v {
+
 class String {
 private:
   char *data;
@@ -11,13 +13,12 @@ public:
   String() : data(nullptr) {}
 
   String(const char *str) {
-    if (str) {
-      data = new char[strlen(str) + 1];
-      strcpy(data, str);
-    } else {
+    if (!str)
       data = nullptr;
-    }
+    data = new char[strlen(str) + 1];
+    strcpy_s(data, strlen(str) + 1, str);
   }
+
   String(const String &other) {
     if (other.data) {
       data = new char[strlen(other.data) + 1];
@@ -32,8 +33,7 @@ public:
   String &operator=(const String &other) {
     if (this != &other) // Check for self-assignment
     {
-      // First, clean up existing memory
-      if (data != nullptr)
+      if (data)
         delete[] data;
       // Then allocate new memory and copy the data
       if (other.data) {
@@ -57,7 +57,7 @@ public:
     return *this;
   }
 
-  String operator+(const char &other) {
+  String &operator+(const char &other) {
     String newString;
     if (data != nullptr) {
       newString.data = new char[strlen(data) + 2];
@@ -69,7 +69,8 @@ public:
       newString.data[0] = other;
       newString.data[1] = '\0';
     }
-    return newString;
+    *this = newString;
+    return *this;
   }
 
   String operator+(const String &other) {

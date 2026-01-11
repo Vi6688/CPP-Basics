@@ -90,18 +90,18 @@ public:
     return *this;
   }
 
-  // Access operator
-  VectorElement<T> operator[](size_t index) {
-    if (index >= _size)
-      throw std::out_of_range("Index out of range");
-    return VectorElement<T>(this, index);
-  }
-
   const T &operator[](size_t index) const {
     if (index >= _size)
       throw std::out_of_range("Index out of range");
     return _data[index];
   }
+
+  T &operator[](size_t index) {
+    if (index >= _size)
+      throw std::out_of_range("Index out of range");
+    return _data[index];
+  }
+
 
   void resize(size_t newSize) {
     T *newData = new T[newSize];
