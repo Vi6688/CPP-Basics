@@ -1,27 +1,19 @@
-#include "Ptr.h"
-#include "String.hpp"
-#include <atomic>
-#include <iostream>
-#include <thread>
+#include "Timer.hpp"
+#include "common.h"
+#include <string>
+#include <vector>
+
 
 using namespace std;
 using namespace v;
 
-class Name {
-private:
-  String name;
-
-public:
-  Name(String otherName) { name = otherName; }
-  void set(String otherName) { name = otherName; }
-  void printName() { cout << name << endl; }
-};
-typedef Ptr<Name> NamePtr;
-
 int main() {
-  
-  NamePtr name = new Name("");
+  Timer a;
+  loopI(100000) {
+    vector<string> numbers = {"one", "two",   "three", "four", "five",
+                              "six", "seven", "eight", "nine", "ten"};
 
-  name->set("Hii");
-  name->printName();
+    numbers[i % 10] = "number";
+  }
+  return 0;
 }

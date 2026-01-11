@@ -10,3 +10,5 @@ Buil*
 build*
 *.bin
 .*
+.vs/*
+.vscode/*
