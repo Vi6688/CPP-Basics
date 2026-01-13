@@ -13,8 +13,9 @@ namespace v {
 using namespace std;
 
 #define loopI(SIZE) for (int i = 0; i < SIZE; i++)
+#define loopJ(SIZE) for (int j = 0; j < SIZE; j++)
+#define loopK(SIZE) for (int k = 0; k < SIZE; k++)
 
- 
 // inline void readCsv(Vector<Vector<string>> &data) {
 //   ifstream inputFile("Basics/Railway/user.csv");
 //   if (!inputFile.is_open()) {

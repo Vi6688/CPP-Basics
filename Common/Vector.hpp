@@ -83,10 +83,13 @@ public:
       delete[] _data;
       _size = other._size;
       capacity = other.capacity;
-      _data = new T[capacity];
-      for (size_t i = 0; i < _size; i++)
-        _data[i] = other._data[i];
+      _data = other._data;
     }
+    return *this;
+  }
+  
+  Vector &operator=(const T &fill) {
+    fill(fill);
     return *this;
   }
 
@@ -102,9 +105,17 @@ public:
     return _data[index];
   }
 
-
   void resize(size_t newSize) {
-    T *newData = new T[newSize];
+    if (newSize < capacity) {
+      _size = newSize;
+      return;
+    }
+
+    while (capacity < newSize) {
+      capacity = capacity * 2 + 1;
+    }
+
+    T *newData = new T[capacity];
     size_t copySize = (newSize < _size) ? newSize : _size;
     if (copySize) {
       for (size_t i = 0; i < copySize; i++)
@@ -112,24 +123,24 @@ public:
     }
     delete[] _data;
     _data = newData;
-    capacity = newSize;
+    _size = newSize;
   }
 
   void resize(const size_t newSize, const T &fill) {
-    T *newData = new T[newSize];
-    for (int i = 0; i < newSize; i++) {
-      newData[i] = fill;
-    }
-    delete[] _data;
-    _data = newData;
-    capacity = newSize;
+    resize(newSize);
+    fill(fill);
   }
 
   void push_back(const T &value) {
     if (_size >= capacity)
-      resize(capacity == 0 ? 1 : capacity * 2);
+      resize(_size + 1);
 
     _data[_size++] = value;
+  }
+
+  void fill(const T &value) {
+    for (size_t i = 0; i < _size; i++)
+      _data[i] = value;
   }
 
   void pop_back() {
@@ -166,14 +177,14 @@ public:
     size_t index = pos - begin();
     // Grow capacity if needed
     if (_size >= capacity) {
-      size_t newCap = (capacity == 0) ? 1 : capacity * 2;
-      resize(newCap);
+      resize(index + 1);
     }
 
     if (_size == 1) {
       _data[0] = value;
       return begin();
     }
+
     // Shift elements to the right
     for (size_t i = _size - 1; i > index; --i) {
       _data[i] = _data[i - 1];
