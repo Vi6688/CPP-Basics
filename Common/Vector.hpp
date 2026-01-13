@@ -1,10 +1,12 @@
 #pragma once
 #include <algorithm>
+#include <cassert>
 #include <cstddef>
 #include <cstring>
 #include <initializer_list>
 #include <iostream>
 #include <stdexcept>
+#include <type_traits>
 
 namespace v {
 
@@ -43,7 +45,7 @@ template <typename T>
 class Vector {
 private:
   T *_data = nullptr;
-  size_t capacity = 0;
+  size_t _capacity = 0;
   size_t _size = 0;
 
 public:
@@ -51,7 +53,7 @@ public:
 
   Vector(std::initializer_list<T> list) {
     _size = list.size();
-    capacity = _size;
+    _capacity = _size;
     _data = new T[_size];
 
     size_t i = 0;
@@ -59,67 +61,79 @@ public:
       _data[i++] = val;
   }
 
-  Vector(size_t size, const T &fill) : _size(size), capacity(size) {
+  Vector(size_t size, const T &fill) : _size(size), _capacity(size) {
     _data = new T[size];
     for (size_t i = 0; i < size; i++)
       _data[i] = fill;
   }
 
-  Vector(size_t size) : _size(size), capacity(size) { _data = new T[size]; }
+  Vector(size_t size) : _size(size), _capacity(size) { _data = new T[size]; }
 
   ~Vector() { delete[] _data; }
 
   T *data() { return _data; }
 
-  // Copy constructor
-  Vector(const Vector &other) : _size(other._size), capacity(other.capacity) {
-    _data = new T[capacity];
-    for (size_t i = 0; i < _size; i++)
-      _data[i] = other._data[i];
+  Vector(const Vector &other)
+    requires std::is_copy_constructible_v<T>
+      : _data(nullptr), _size(other._size), _capacity(other._capacity) {
+    if (_capacity == 0)
+      return;
+
+    _data = new T[_capacity];
+    std::memmove(_data, other._data, _size * sizeof(T));
   }
 
   Vector &operator=(const Vector &other) {
     if (this != &other) {
       delete[] _data;
       _size = other._size;
-      capacity = other.capacity;
+      _capacity = other._capacity;
       _data = other._data;
     }
     return *this;
   }
-  
-  Vector &operator=(const T &fill) {
-    fill(fill);
-    return *this;
+
+  void move(Vector &other) {
+    if (!_data)
+      delete[] _data;
+    _size = other._size;
+    _capacity = other._capacity;
+    _data = other._data;
+    other._data = nullptr;
+    other._size = 0;
+    other._capacity = 0;
   }
 
-  const T &operator[](size_t index) const {
-    if (index >= _size)
-      throw std::out_of_range("Index out of range");
+  // Vector &operator=(const T &fill) {
+  //   fill(fill);
+  //   return *this;
+  // }
+
+  inline constexpr const T &operator[](const size_t &index) const {
+    assert(index < _size);
     return _data[index];
   }
 
-  T &operator[](size_t index) {
-    if (index >= _size)
-      throw std::out_of_range("Index out of range");
+  inline constexpr T &operator[](const size_t &index) {
+    assert(index < _size);
     return _data[index];
   }
 
-  void resize(size_t newSize) {
-    if (newSize < capacity) {
+  void resize(const size_t &newSize) {
+    if (newSize < _capacity) {
       _size = newSize;
       return;
     }
 
-    while (capacity < newSize) {
-      capacity = capacity * 2 + 1;
+    while (_capacity <= newSize) {
+      _capacity = _capacity * 2 + 1;
     }
 
-    T *newData = new T[capacity];
+    T *newData = new T[_capacity];
     size_t copySize = (newSize < _size) ? newSize : _size;
     if (copySize) {
       for (size_t i = 0; i < copySize; i++)
-        newData[i] = _data[i];
+        newData[i] = std::move(_data[i]);
     }
     delete[] _data;
     _data = newData;
@@ -132,10 +146,22 @@ public:
   }
 
   void push_back(const T &value) {
-    if (_size >= capacity)
-      resize(_size + 1);
-
+    if (_size >= _capacity)
+      resize(_size);
     _data[_size++] = value;
+  }
+
+  void push_back(T &&value) {
+    if (_size == _capacity)
+      resize(_size);
+    _data[_size++] = std::move(value);
+  }
+
+  template <typename... Args> void emplace_back(Args &&...args) {
+    if (_size == _capacity)
+      resize(_size);
+
+    _data[_size++] = T(std::forward<Args>(args)...);
   }
 
   void fill(const T &value) {
@@ -149,8 +175,8 @@ public:
     _size--;
   }
 
-  size_t size() const { return _size; }
-  size_t getCapacity() const { return capacity; }
+  constexpr size_t size() const { return _size; }
+  constexpr size_t getCapacity() const { return _capacity; }
   bool isEmpty() const { return _size == 0; }
 
   void print() const {
@@ -176,7 +202,7 @@ public:
 
     size_t index = pos - begin();
     // Grow capacity if needed
-    if (_size >= capacity) {
+    if (_size >= _capacity) {
       resize(index + 1);
     }
 

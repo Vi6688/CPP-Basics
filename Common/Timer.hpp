@@ -16,6 +16,17 @@ public:
         std::chrono::duration_cast<std::chrono::nanoseconds>(end - start);
     return duration.count();
   }
+  void reset() { start = std::chrono::high_resolution_clock::now(); }
+  long int elapsed(bool print = false) {
+    auto end = std::chrono::high_resolution_clock::now();
+    auto duration =
+        std::chrono::duration_cast<std::chrono::nanoseconds>(end - start);
+    auto timeTaken = duration.count();
+    if (print)
+
+      std::cout << "Time taken: " << timeTaken << " us\n";
+    return timeTaken;
+  }
 
   ~Timer() {
     if (_timeTaken) {
