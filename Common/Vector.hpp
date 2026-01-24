@@ -9,40 +9,8 @@
 #include <type_traits>
 
 namespace v {
-
-template <typename T> class Vector;
-template <typename T> class VectorElement {
-  Vector<T> *_parent;
-  size_t _index;
-
-public:
-  VectorElement(Vector<T> *parent, size_t index)
-      : _parent(parent), _index(index) {}
-  // Assignment: v[i] = value
-  VectorElement &operator=(const T &value) {
-    (*_parent).data()[_index] = value;
-    return *this;
-  }
-  size_t size() { return (*_parent).data()->size(); }
-  size_t size() const { return (*_parent).data()->size(); }
-
-  void resize(const size_t &size) { (*_parent).data()[_index].resize(size); }
-  void resize(const size_t &size, const T &fill) {
-    (*_parent).data()[_index].resize(size, fill);
-  }
-
-  operator T() const { return (*_parent).data()[_index]; }
-
-  auto operator[](const size_t &index) {
-    return (*_parent).data()[_index][index];
-  }
-  auto operator[](size_t j) const { return (*_parent).data()[_index][j]; }
-
-  auto data() { return (*_parent).data(); }
-};
-template <typename T>
-
-class Vector {
+  
+template <typename T> class Vector {
 private:
   T *_data = nullptr;
   size_t _capacity = 0;

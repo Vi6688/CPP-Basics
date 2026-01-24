@@ -16,7 +16,7 @@ public:
     if (!str)
       data = nullptr;
     data = new char[strlen(str) + 1];
-    strcpy_s(data, strlen(str) + 1, str);
+    strcpy(data, str);
   }
 
   String(const String &other) {
@@ -128,7 +128,7 @@ public:
     return os;
   }
   friend std::istream &operator>>(std::istream &is, const String &other) {
-    is >> other.data;
+    is >> *other.data;
     return is;
   }
   void print() const {

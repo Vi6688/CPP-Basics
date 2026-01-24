@@ -24,7 +24,7 @@ public:
     auto timeTaken = duration.count();
     if (print)
 
-      std::cout << "Time taken: " << timeTaken << " us\n";
+      std::cout << "Time taken: " << timeTaken << " ns\n";
     return timeTaken;
   }
 
@@ -32,7 +32,7 @@ public:
     if (_timeTaken) {
       *_timeTaken += runTime();
     } else {
-      std::cout << "Time taken: " << runTime() << " us\n";
+      std::cout << "Time taken: " << runTime() << " ns\n";
     }
   }
 
