@@ -1,4 +1,5 @@
 #pragma once
+#include <cassert>
 #include <cstring>
 #include <iostream>
 #include <string.h>
@@ -7,67 +8,74 @@ namespace v {
 
 class String {
 private:
-  char *data;
+  char *_data;
 
 public:
-  String() : data(nullptr) {}
+  String() : _data(nullptr) {}
 
   String(const char *str) {
     if (!str)
-      data = nullptr;
-    data = new char[strlen(str) + 1];
-    strcpy(data, str);
+      _data = nullptr;
+    _data = new char[strlen(str) + 1];
+    strcpy(_data, str);
   }
 
   String(const String &other) {
-    if (other.data) {
-      data = new char[strlen(other.data) + 1];
-      strcpy(data, other.data);
+    if (other._data) {
+      _data = new char[strlen(other._data) + 1];
+      strcpy(_data, other._data);
     } else {
-      data = nullptr;
+      _data = nullptr;
     }
   }
 
-  const char *get() const { return data; }
+  const char *get() const { return _data; }
 
   String &operator=(const String &other) {
     if (this != &other) // Check for self-assignment
     {
-      if (data)
-        delete[] data;
+      if (_data)
+        delete[] _data;
       // Then allocate new memory and copy the data
-      if (other.data) {
-        data = new char[strlen(other.data) + 1]; // Allocate memory for the copy
-        strcpy(data, other.data);                // Copy the data
+      if (other._data) {
+        _data =
+            new char[strlen(other._data) + 1]; // Allocate memory for the copy
+        strcpy(_data, other._data);            // Copy the data
       } else {
-        data = nullptr; // Handle the case where other.data is nullptr
+        _data = nullptr; // Handle the case where other.data is nullptr
       }
     }
     return *this;
   }
 
   String &operator=(const char &other) {
-    if (data != nullptr)
-      delete[] data;
-    std::cout << "yes" << std::endl;
-
-    data = new char[2];
-    data[0] = other;
-    data[1] = '\0';
+    if (_data) {
+      delete[] _data;
+    }
+    _data = new char[2];
+    _data[0] = other;
+    _data[1] = '\0';
     return *this;
   }
 
+  void reserve(const size_t &newSize) {
+    if (_data)
+      delete[] _data;
+    _data = new char[newSize];
+    _data[0] = '\0';
+  }
+  
   String &operator+(const char &other) {
     String newString;
-    if (data != nullptr) {
-      newString.data = new char[strlen(data) + 2];
-      strcpy(newString.data, data);
-      newString.data[strlen(data)] = other;
-      newString.data[strlen(data) + 1] = '\0';
+    if (_data != nullptr) {
+      newString._data = new char[strlen(_data) + 2];
+      strcpy(newString._data, _data);
+      newString._data[strlen(_data)] = other;
+      newString._data[strlen(_data) + 1] = '\0';
     } else {
-      newString.data = new char[2];
-      newString.data[0] = other;
-      newString.data[1] = '\0';
+      newString._data = new char[2];
+      newString._data[0] = other;
+      newString._data[1] = '\0';
     }
     *this = newString;
     return *this;
@@ -75,67 +83,93 @@ public:
 
   String operator+(const String &other) {
     String newString;
-    if (other.data != nullptr && data != nullptr) {
-      newString.data = new char[strlen(other.data) + strlen(data) + 1];
-      strcpy(newString.data, data);
-      strcat(newString.data, other.data);
-    } else if (other.data != nullptr) {
-      newString.data = new char[strlen(other.data) + 1];
-      strcpy(newString.data, other.data);
-    } else if (data != nullptr) {
-      newString.data = new char[strlen(data) + 1];
-      strcpy(newString.data, data);
+    if (other._data != nullptr && _data != nullptr) {
+      newString._data = new char[strlen(other._data) + strlen(_data) + 1];
+      strcpy(newString._data, _data);
+      strcat(newString._data, other._data);
+    } else if (other._data != nullptr) {
+      newString._data = new char[strlen(other._data) + 1];
+      strcpy(newString._data, other._data);
+    } else if (_data != nullptr) {
+      newString._data = new char[strlen(_data) + 1];
+      strcpy(newString._data, _data);
     }
-
     return newString;
   }
 
   String substr(const int &pos, const int &len) {
-    if (pos < 0 || pos >= strlen(data) || len <= 0)
+    if (pos < 0 || pos >= size() || len <= 0)
       return String();
-    int actualLen = std::min(len, int(strlen(data) - pos));
+    int actualLen = std::min(len, int(size() - pos));
     String newString;
-    newString.data = new char[actualLen + 1];
+    newString._data = new char[actualLen + 1];
 
     for (int i = 0; i < actualLen; i++) {
-      newString.data[i] = data[pos + i];
+      newString._data[i] = _data[pos + i];
     }
-    newString.data[actualLen] = '\0';
+    newString._data[actualLen] = '\0';
     return newString;
   }
   bool operator==(const String &other) {
-    return (strcmp(data, other.data) == 0);
+    return (strcmp(_data, other._data) == 0);
   }
-  bool operator==(String &other) { return (strcmp(data, other.data) == 0); }
+  bool operator==(String &other) { return (strcmp(_data, other._data) == 0); }
   bool operator!=(const String &other) {
-    return !(strcmp(data, other.data) == 0);
+    return !(strcmp(_data, other._data) == 0);
   }
-  bool operator>(const String &other) { return (strcmp(data, other.data) > 0); }
-  bool operator<(const String &other) { return (strcmp(data, other.data) < 0); }
+  bool operator>(const String &other) {
+    return (strcmp(_data, other._data) > 0);
+  }
+  bool operator<(const String &other) {
+    return (strcmp(_data, other._data) < 0);
+  }
   bool operator>(const String &other) const {
-    return (strcmp(data, other.data) > 0);
+    return (strcmp(_data, other._data) > 0);
   }
   bool operator<(const String &other) const {
-    return (strcmp(data, other.data) < 0);
+    return (strcmp(_data, other._data) < 0);
   }
-  bool empty() const { return data == nullptr; }
+  String &operator+=(const String &other) {
+    *this = *this + other;
+    return *this;
+  }
+  const char &operator[](const size_t &index) const {
+    assert(index < size());
+    return _data[index];
+  }
+  inline constexpr char &operator[](const size_t &index) {
+    assert(index < size());
+    return _data[index];
+  }
+  bool empty() const { return _data == nullptr; }
   friend std::ostream &operator<<(std::ostream &os, const String &other) {
-    if (other.data) {
-      os << other.data;
+    if (other._data) {
+      os << other._data;
     } else {
       os << "Empty String";
     }
     return os;
   }
   friend std::istream &operator>>(std::istream &is, const String &other) {
-    is >> *other.data;
+    is >> *other._data;
     return is;
   }
   void print() const {
-    if (data != nullptr)
-      std::cout << data << std::endl;
+    if (_data != nullptr)
+      std::cout << _data << std::endl;
+    else
+      std::cout << "Empty String" << std::endl;
   }
 
-  ~String() { delete[] data; }
+  inline constexpr size_t size() const {
+    if (_data)
+      return strlen(_data);
+    return 0;
+  }
+
+  ~String() {
+    if (_data)
+      delete[] _data;
+  }
 };
 } // namespace v
