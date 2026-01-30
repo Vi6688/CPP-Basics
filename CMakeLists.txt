@@ -6,6 +6,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 add_subdirectory(Tests)
+add_subdirectory(Basics)
 
 add_executable(Main Main.cpp)
 find_package(Threads REQUIRED)
